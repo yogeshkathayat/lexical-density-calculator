@@ -13,7 +13,7 @@ const seedDB = async () => {
 
         let nonLexicalWordsInDb = await LexicalModel.find({}).lean();
 
-        if (nonLexicalWordsInDb.length === 0 || !nonLexicalWordsInDb || nonLexicalWordsInDb.length != nonLexicalWords.length) {
+        if (nonLexicalWordsInDb.length === 0 || !nonLexicalWordsInDb || nonLexicalWordsInDb.length !== nonLexicalWords.length) {
             let promise = [];
             for (let i = 0; i < nonLexicalWords.length; i++) {
 

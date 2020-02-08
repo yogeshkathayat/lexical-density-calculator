@@ -22,10 +22,7 @@ export class LexicalService {
     public async findComplexity(text: string) {
         try {
 
-            let nonLexicalWords: ILexical[] = await LexicalModel.find({}, { _id: 0 }).lean();
-            let nonLexicalWordsArr = nonLexicalWords.map(element => element.word);
-
-            let complexity = this.calculateComplexity(text, nonLexicalWordsArr);
+            let complexity = await this.calculateComplexity(text);
             return { overall_ld: complexity };
 
         } catch (error) {
@@ -44,14 +41,10 @@ export class LexicalService {
     public async findComplexitySentence(text: string) {
         try {
 
-            let nonLexicalWords: ILexical[] = await LexicalModel.find({}, { _id: 0 }).lean();
-            let nonLexicalWordsArr = nonLexicalWords.map(element => element.word);
-
-            let complexity = this.calculateComplexity(text.trim(), nonLexicalWordsArr); //calculate overall density
+            let complexity = await this.calculateComplexity(text.trim()); //calculate overall density
             let sentenceArray = this.breakTextIntoSentences(text); //breaking text into sentences
 
-            let complexityArr = sentenceArray.map(words => this.calculateComplexity(words.trim(), nonLexicalWordsArr)) //calculate density for each sentence
-
+            let complexityArr = await Promise.all(sentenceArray.map(async words => await this.calculateComplexity(words.trim())));//calculate density for each sentence
             return { sentence_ld: complexityArr, overall_ld: complexity };
 
         } catch (error) {
@@ -66,7 +59,7 @@ export class LexicalService {
     * @param {string}  text 
     * @returns {Array} array of sentences
     */
-    private breakTextIntoSentences(text: string) {
+    public breakTextIntoSentences(text: string) {
         try {
 
             let sentencesArr: string[] = [];
@@ -99,20 +92,26 @@ export class LexicalService {
      * @param {string[]} nonLexicalWords string[]
      * @returns {number} lexical density
      */
-    private calculateComplexity(words: string, nonLexicalWords: string[]) {
+    public async calculateComplexity(words: string) {
         try {
             let lexicalCount = 0;
-            let wordsArr = words.split(' ');
+            let wordsArr = words ? words.split(' ') : [];
+            if (wordsArr.length == 0) return "0.00";
             let wordsArrCount = 0;
+
+            let nonLexicalWords: ILexical[] = await LexicalModel.find({}, { _id: 0 }).lean(); //get all non lexical words from db
+            let nonLexicalWordsArr = nonLexicalWords.map(element => element.word);
+
+
             for (let word of wordsArr) {
                 if (!sentenceSeparator.includes(word)) {
                     wordsArrCount++;
-                    if (!nonLexicalWords.includes(word.trim())) {
+                    if (!nonLexicalWordsArr.includes(word.trim())) {
                         lexicalCount++;
                     }
                 }
             }
-            let complexity = wordsArrCount === 0 ? 0.0 : (lexicalCount / wordsArrCount).toFixed(2); //calculating density
+            let complexity = wordsArrCount === 0 ? "0.00" : (lexicalCount / wordsArrCount).toFixed(2); //calculating density
             return complexity;
         } catch (error) {
             throw error;
