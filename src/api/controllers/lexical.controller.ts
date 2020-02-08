@@ -42,7 +42,7 @@ export class LexicalController {
                 return ResponseHandler.setResponse(res, false, HttpStatus.BAD_REQUEST, errorMessage.FAILED, version.v1, { error: 'Only texts with up to 100 words or up to 1000 characters are valid input.' });
 
             }
-            var lexicalDensity = {};
+            let lexicalDensity = {};
             if (req.query.mode && req.query.mode === 'verbose') { //if mode is verbose find lexical density of sentences
                 lexicalDensity = await lexicalService.findComplexitySentence(req.body.text.toLowerCase());
             }
