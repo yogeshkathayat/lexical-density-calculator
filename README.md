@@ -32,7 +32,7 @@ allows, please provide a protected endpoint where new words can be added over
 time.
 
 ## Built With
-- Node.js
+- Node.js (v12.14.1)
 - Typescript
 - Express
 - Mongoose
