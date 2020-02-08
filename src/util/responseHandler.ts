@@ -37,7 +37,7 @@ class ResponseHandler {
             code: this.status,
             message: this.message,
             appVersion: this.appVersion,
-            result: (this.result === null || this.result === "null" || this.result === "") ? [] : this.result,
+            data: (this.result === null || this.result === "null" || this.result === "") ? [] : this.result,
         });
 
     }
