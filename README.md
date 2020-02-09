@@ -47,6 +47,11 @@ $ yarn
 ## Running the app
 
 ```bash
+# copy env.example to env
+$ cp .env.example env
+
+change MONGODB_URL to your mongodb instance connection URL
+
 # build app
 $ yarn build
 
