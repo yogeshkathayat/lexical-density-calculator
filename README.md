@@ -38,6 +38,14 @@ time.
 - Mongoose
 - Jest with Supertest for unit testing and coverage
 
+## RUNNING APP WITH DOCKER
+Docker & docker-compose must be installed
+
+```bash
+$ docker-compose up --build
+```
+
+## RUNNING APP WITHOUT DOCKER
 
 ## Dependency Installation
 
@@ -50,7 +58,7 @@ $ yarn
 # copy env.example to env
 $ cp .env.example env
 
-change MONGODB_URL to your mongodb instance connection URL
+change MONGODB_URL to your mongodb instance connection URL (Mongodb should be installed and running)
 
 # build app
 $ yarn build

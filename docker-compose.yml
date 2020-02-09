@@ -1,0 +1,23 @@
+version: "3"
+networks:
+  default:
+services:
+  lexical-density-app:
+    networks:
+      - default
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      ENV_NAME: dev
+      PORT: 3000
+      MONGODB_URL: mongodb://lexical-density-mongodb:27017/Lexical-Density
+    ports:
+      - 3000:3000
+    links:
+      - lexical-density-mongodb
+  lexical-density-mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
